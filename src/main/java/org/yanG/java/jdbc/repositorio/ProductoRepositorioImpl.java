@@ -67,7 +67,7 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
         return p;
     }
 
-    //Dentro de este método vamos a tener el insert/crear y el update que se le realiza a una BD
+    //Dentro de este método vamos a tener el insert/crear y el update/actualizar que se le realiza a una BD
     @Override
     public void guardar(Producto objeto) {
         String sql;
