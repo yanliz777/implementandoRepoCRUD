@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionBD_singleton {
+
     private static String url = "jdbc:mysql://localhost:3306/java_curso?serverTimezone=UTC";
     private static String username = "root";
     private static String password = "fRan@72412";

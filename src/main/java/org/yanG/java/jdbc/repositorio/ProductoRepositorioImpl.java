@@ -28,6 +28,7 @@ una intancia en todo el programa,esta conexión se cierra al final de la aplicac
 indicamos que haga autoclose a lo que esta entre el parentesis del try():
  */
         try(Statement stmt = getConnection().createStatement();
+//ResultSet Contiene las filas o registros obtenidos al ejecutar una sentencia SELECT
             ResultSet resultado = stmt.executeQuery("SELECT * FROM productos")) {
             /*
     En el ciclo while(resultado.next()) recorremos todos los registros que traemos de
@@ -50,13 +51,15 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
 
         try(PreparedStatement stmt = getConnection().prepareStatement(
                 "SELECT * FROM productos WHERE id = ?")) {
+
             //Pasamos el parámetro del id:
             stmt.setLong(1,id);
-            ResultSet resultado = stmt.executeQuery();//devuelve un solo producto o ninguno
-            if(resultado.next()){
-                p = crearProducto(resultado);
+//ResultSet resultado = stmt.executeQuery() : devuelve solo un producto o ninguno
+            try (ResultSet resultado = stmt.executeQuery()) {
+                if (resultado.next()) {
+                    p = crearProducto(resultado);
+                }
             }
-            resultado.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,14 +67,54 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
         return p;
     }
 
-    //Dentro de este método vamos a tener el insert y el update
+    //Dentro de este método vamos a tener el insert/crear y el update que se le realiza a una BD
     @Override
     public void guardar(Producto objeto) {
+        String sql;
+        if (objeto.getId() != null && objeto.getId() > 0 )//para actualizar/update
+        {
+            sql = "UPDATE productos SET nombre = ?, precio = ? WHERE id = ?";
+        }else //Para Insertar/crear el objeto
+        {
+            sql = "INSERT INTO productos(nombre, precio, fecha_registro)" +
+                    "VALUES(?,?,?)";
+        }
+//PreparedStatement: Permite ejecutar sentencias SQL con parámetros de entrada:
+        try(PreparedStatement stmt = getConnection().prepareStatement(sql)){
+            //pasamos los parametros:
+            stmt.setString(1,objeto.getNombre());
+            stmt.setLong(2,objeto.getPrecio());
 
+            if (objeto.getId() != null && objeto.getId() > 0 )//para actualizar/update
+            {
+                stmt.setLong(3, objeto.getId());
+            }else //Para Insertar/crear el objeto
+            {
+                stmt.setDate(3,new Date(objeto.getFecha_registro().getTime()));
+            }
+/*
+El método executeUpdate() en JDBC (Java Database Connectivity) se utiliza para ejecutar sentencias SQL
+que modifican la base de datos, como las sentencias INSERT, UPDATE, DELETE, y algunas operaciones
+DDL (Data Definition Language) como CREATE TABLE y DROP TABLE.
+ */
+            stmt.executeUpdate();//ejecutamos la sentencia
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    //método para eliminar un objeto de la BD
     @Override
     public void eliminar(Long id) {
+        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM productos WHERE id = ?")) {
+
+            stmt.setLong(1,id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     //método que se encarga de mapear/settiar los datos de la bd:
