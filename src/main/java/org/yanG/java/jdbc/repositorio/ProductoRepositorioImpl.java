@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 /*
 Implementamos la interface repositorio para hacer la operaciones
-básicas en una BD
+básicas en una BD(CRUD)
  */
 public class ProductoRepositorioImpl implements Repositorio<Producto>{
 
@@ -46,7 +46,7 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
         return  productos;
     }
 
-    //Método para buscar por id (id de producto ya que producto contiene la categoria):
+    //Método para buscar por id un producto(id de producto ya que producto contiene la categoria):
     @Override
     public Producto BuscarPorId(Long id) {
         Producto p = null;
@@ -124,6 +124,7 @@ DDL (Data Definition Language) como CREATE TABLE y DROP TABLE.
     }
     //método que se encarga de mapear/settiar los datos de la bd:
     private Producto crearProducto(ResultSet resultado) throws SQLException {
+
         Producto p = new Producto();
         p.setId(resultado.getLong("id"));
         p.setNombre(resultado.getString("nombre"));
