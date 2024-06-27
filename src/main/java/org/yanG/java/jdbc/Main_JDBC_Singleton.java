@@ -1,5 +1,6 @@
 package org.yanG.java.jdbc;
 
+import org.yanG.java.jdbc.modelo.Categoria;
 import org.yanG.java.jdbc.modelo.Producto;
 import org.yanG.java.jdbc.repositorio.ProductoRepositorioImpl;
 import org.yanG.java.jdbc.repositorio.Repositorio;
@@ -25,9 +26,13 @@ public class Main_JDBC_Singleton {
 
             System.out.println("=========Creamos/insertamos nuevo producto==========");
             Producto producto = new Producto();
-            producto.setNombre("Teclado mecánico");
-            producto.setPrecio(500);
+            producto.setNombre("Teclado Ryzer mecánico");
+            producto.setPrecio(550);
             producto.setFecha_registro(new Date());//fecha creación de producto
+            //el producto tiene que tener la categoria, como esta relacionado, siempre van juntos
+            Categoria categoria = new Categoria();
+            categoria.setId(3L);
+            producto.setCategoria(categoria);
             repositorio.guardar(producto);
             System.out.println("Producto guardado con exito");
             for (int i = 0; i < repositorio.Listar().size() ; i++) {

@@ -1,5 +1,6 @@
 package org.yanG.java.jdbc;
 
+import org.yanG.java.jdbc.modelo.Categoria;
 import org.yanG.java.jdbc.modelo.Producto;
 import org.yanG.java.jdbc.repositorio.ProductoRepositorioImpl;
 import org.yanG.java.jdbc.repositorio.Repositorio;
@@ -27,9 +28,14 @@ public class Main_JDBC_SingletonUpdate {
 
             System.out.println("========Actualizamos un producto==========");
             Producto producto = new Producto();
-            producto.setId(3L);
-            producto.setNombre("Teclado Razer");
-            producto.setPrecio(700);
+            producto.setId(7L);
+            producto.setNombre("Teclado Cosair k95 mecánico");//cambiamos nombre
+            producto.setPrecio(300);
+            //pasamos la categoria porque producto y categoria están relacionados
+            // y podías haber un nullpointer exption:
+            Categoria categoria = new Categoria();
+            categoria.setId(2L);//cambia de categoria
+            producto.setCategoria(categoria);
             repositorio.guardar(producto);
             System.out.println("Producto actualizado con exito");
 

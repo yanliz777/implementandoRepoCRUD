@@ -8,6 +8,8 @@ public class Producto {
     private String nombre;
     private Integer precio;
     private Date fecha_registro;
+    //Atributo que funcina como foranea para relacionar producto con categoria:
+    private Categoria categoria;
 
     //constructore:
     public Producto() {
@@ -52,6 +54,14 @@ public class Producto {
         this.fecha_registro = fecha_registro;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
     @Override
     public String toString() {
         return  id +
@@ -60,6 +70,8 @@ public class Producto {
                 " | " +
                 precio +
                 " | " +
-                fecha_registro;
+                fecha_registro +
+                " | " +
+                categoria.getNombre();
     }
 }

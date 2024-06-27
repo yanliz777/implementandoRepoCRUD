@@ -37,7 +37,7 @@ public class Main_JDBC_SingletonDelete {
             }
 
             System.out.println("=========Eliminamos un producto==========");
-            repositorio.eliminar(3l);
+            repositorio.eliminar(6l);
             System.out.println("Producto eliminado con exito");
 
             for (int i = 0; i < repositorio.Listar().size() ; i++) {

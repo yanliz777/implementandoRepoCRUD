@@ -1,5 +1,6 @@
 package org.yanG.java.jdbc.repositorio;
 
+import org.yanG.java.jdbc.modelo.Categoria;
 import org.yanG.java.jdbc.modelo.Producto;
 import org.yanG.java.jdbc.util.ConexionBD_singleton;
 import java.sql.*;
@@ -29,7 +30,8 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
  */
         try(Statement stmt = getConnection().createStatement();
 //ResultSet Contiene las filas o registros obtenidos al ejecutar una sentencia SELECT
-            ResultSet resultado = stmt.executeQuery("SELECT * FROM productos")) {
+            ResultSet resultado = stmt.executeQuery("SELECT p.*,c.nombre AS nombre_categoria FROM " +
+                    "productos AS p INNER JOIN categorias AS c ON (p.categoria_id = c.id)")) {
             /*
     En el ciclo while(resultado.next()) recorremos todos los registros que traemos de
     la consulta para settiar los datos*/
@@ -44,13 +46,15 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
         return  productos;
     }
 
-    //Método para buscar por id:
+    //Método para buscar por id (id de producto ya que producto contiene la categoria):
     @Override
     public Producto BuscarPorId(Long id) {
         Producto p = null;
 
         try(PreparedStatement stmt = getConnection().prepareStatement(
-                "SELECT * FROM productos WHERE id = ?")) {
+                "SELECT p.*,c.nombre AS nombre_categoria FROM " +
+                        "productos AS p INNER JOIN categorias AS c " +
+                        "ON (p.categoria_id = c.id) WHERE p.id = ?")) {
 
             //Pasamos el parámetro del id:
             stmt.setLong(1,id);
@@ -73,24 +77,25 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
         String sql;
         if (objeto.getId() != null && objeto.getId() > 0 )//para actualizar/update
         {
-            sql = "UPDATE productos SET nombre = ?, precio = ? WHERE id = ?";
+            sql = "UPDATE productos SET nombre = ?, precio = ?, categoria_id = ? WHERE id = ?";
         }else //Para Insertar/crear el objeto
         {
-            sql = "INSERT INTO productos(nombre, precio, fecha_registro)" +
-                    "VALUES(?,?,?)";
+            sql = "INSERT INTO productos(nombre, precio,categoria_id, fecha_registro)" +
+                    "VALUES(?,?,?,?)";
         }
 //PreparedStatement: Permite ejecutar sentencias SQL con parámetros de entrada:
         try(PreparedStatement stmt = getConnection().prepareStatement(sql)){
             //pasamos los parametros:
             stmt.setString(1,objeto.getNombre());
             stmt.setLong(2,objeto.getPrecio());
+            stmt.setLong(3,objeto.getCategoria().getId());
 
             if (objeto.getId() != null && objeto.getId() > 0 )//para actualizar/update
             {
-                stmt.setLong(3, objeto.getId());
+                stmt.setLong(4, objeto.getId());
             }else //Para Insertar/crear el objeto
             {
-                stmt.setDate(3,new Date(objeto.getFecha_registro().getTime()));
+                stmt.setDate(4,new Date(objeto.getFecha_registro().getTime()));
             }
 /*
 El método executeUpdate() en JDBC (Java Database Connectivity) se utiliza para ejecutar sentencias SQL
@@ -124,7 +129,11 @@ DDL (Data Definition Language) como CREATE TABLE y DROP TABLE.
         p.setNombre(resultado.getString("nombre"));
         p.setPrecio(resultado.getInt("precio"));
         p.setFecha_registro(resultado.getDate("fecha_registro"));
-
+        //objeto categoría: para relacionarlo con producto
+        Categoria categoria = new Categoria();
+        categoria.setId(resultado.getLong("categoria_id"));
+        categoria.setNombre(resultado.getString("nombre_categoria"));
+        p.setCategoria(categoria);
         return p;
     }
 }
