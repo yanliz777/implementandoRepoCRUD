@@ -3,15 +3,15 @@ package org.yanG.java.jdbc.modelo;
 import java.util.Date;
 
 public class Producto {
-    //Mapeamos los datos que están en la bd
+    //Mapeamos los datos que están en la base de datos
     private Long id;
     private String nombre;
     private Integer precio;
     private Date fecha_registro;
-    //Atributo que funcina como foranea para relacionar producto con categoria:
+    //Atributo que funcina como llave foranea para relacionar producto con categoria:
     private Categoria categoria;
 
-    //constructore:
+    //constructor:
     public Producto() {
     }
 

@@ -10,7 +10,7 @@ public interface Repositorio<T> {
 
     T BuscarPorId(Long id);
 
-    //Dentro de este método vamos a tener el insert y el update
+    //Dentro de este metodo vamos a tener el insert y el update
     void guardar(T objeto);
 
     //Siempre se elimina por la llave primaria:

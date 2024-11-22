@@ -12,20 +12,20 @@ básicas en una BD(CRUD)
  */
 public class ProductoRepositorioImpl implements Repositorio<Producto>{
 
-    //método privado que devuelve la conexión a la bd:
+    //metodo privado que devuelve la conexión a la bd:
     private Connection getConnection() throws SQLException {
         return ConexionBD_singleton.getInstance();
     }
 
 
-    //método para listar:
+    //metodo para listar:
     @Override
     public List<Producto> Listar() {
         List<Producto> productos = new ArrayList<>();
 /*
 Nota: es importante NO cerrar el recurso de la conexión a la bd. Por eso no cerramos
-el objeto Connection ya que utilizamos un singleton y se cerraria la conxión al ser solo
-una intancia en todo el programa,esta conexión se cierra al final de la aplicación. Solo
+el objeto Connection ya que utilizamos un singleton y se cerraria la conxion al ser solo
+una intancia en todo el programa,esta conexion se cierra al final de la aplicacion. Solo
 indicamos que haga autoclose a lo que esta entre el parentesis del try():
  */
         try(Statement stmt = getConnection().createStatement();
@@ -50,7 +50,7 @@ indicamos que haga autoclose a lo que esta entre el parentesis del try():
     @Override
     public Producto BuscarPorId(Long id) {
         Producto p = null;
-
+//PreparedStatement: Permite ejecutar sentencias SQL con parámetros de entrada:
         try(PreparedStatement stmt = getConnection().prepareStatement(
                 "SELECT p.*,c.nombre AS nombre_categoria FROM " +
                         "productos AS p INNER JOIN categorias AS c " +
@@ -132,8 +132,8 @@ DDL (Data Definition Language) como CREATE TABLE y DROP TABLE.
         p.setFecha_registro(resultado.getDate("fecha_registro"));
         //objeto categoría: para relacionarlo con producto
         Categoria categoria = new Categoria();
-        categoria.setId(resultado.getLong("categoria_id"));
-        categoria.setNombre(resultado.getString("nombre_categoria"));
+        categoria.setId(resultado.getLong("categoria_id"));//como se pidío en la consulta
+        categoria.setNombre(resultado.getString("nombre_categoria"));//como se pidío en la consulta
         p.setCategoria(categoria);
         return p;
     }

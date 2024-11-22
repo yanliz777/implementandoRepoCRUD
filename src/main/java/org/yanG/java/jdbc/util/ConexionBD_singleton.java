@@ -11,9 +11,11 @@ public class ConexionBD_singleton {
     private static String password = "fRan@72412";
     private static Connection connection;
 
-    //Método estatico getConecction para establecer la conexión y que solo haya una
-    // instancia de esta clase, es decir, una sola conexión a la BD para
-    // toda la aplicación. Solo se crea una vez este objeto:
+    /*
+    Metodo estatico getConecction para establecer la conexión y que solo haya una
+    instancia de esta clase, es decir, una sola conexión a la BD para
+    toda la aplicación. Solo se crea una vez este objeto:
+    */
     public static Connection getInstance() throws SQLException {
         if(connection == null){
             connection = DriverManager.getConnection(url,username,password);
